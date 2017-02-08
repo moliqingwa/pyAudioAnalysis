@@ -147,20 +147,20 @@ def readSegmentGT(gtFile):
      - segEnd:       a numpy array of segments' ending positions
      - segLabel:     a list of respective class labels (strings)
     '''
-    f = open(gtFile, "rb")
-    reader = csv.reader(f, delimiter=',')
     segStart = []
     segEnd = []
     segLabel = []
-    for row in reader:
-        if len(row) == 3:
-            segStart.append(float(row[0]))
-            segEnd.append(float(row[1]))
-            #if row[2]!="other":
-            #    segLabel.append((row[2]))
-            #else:
-            #    segLabel.append("silence")
-            segLabel.append((row[2]))
+    with open(gtFile) as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            if len(row) == 3:
+                segStart.append(float(row[0]))
+                segEnd.append(float(row[1]))
+                #if row[2]!="other":
+                #    segLabel.append((row[2]))
+                #else:
+                #    segLabel.append("silence")
+                segLabel.append((row[2]))
     return numpy.array(segStart), numpy.array(segEnd), segLabel
 
 
@@ -431,7 +431,8 @@ def hmmSegmentation(wavFileName, hmmModelName, PLOT=False, gtFileName=""):
         classesAll = pickle.load(fo)
         mtWin = pickle.load(fo)
         mtStep = pickle.load(fo)
-    except:
+    except Exception as e:
+        print(e)
         fo.close()
     fo.close()
 
